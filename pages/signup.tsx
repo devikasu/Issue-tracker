@@ -11,7 +11,15 @@ export default function Signup() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signUp({ email, password });
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: 'http://localhost:3000/login', // 👈 Add this line
+      },
+    });
+
     if (error) {
       setError(error.message);
     } else {

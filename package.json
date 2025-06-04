@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.10",
@@ -13,7 +14,26 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/react": "19.1.6",
-    "typescript": "5.8.3"
-  }
+    "@types/react": "^19.1.6",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.4",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.8.3"
+  },
+  "description": "",
+  "main": "tailwind.config.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devikasu/Issue-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/devikasu/Issue-tracker/issues"
+  },
+  "homepage": "https://github.com/devikasu/Issue-tracker#readme"
 }
