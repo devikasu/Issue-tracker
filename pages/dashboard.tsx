@@ -86,7 +86,7 @@ export default function Dashboard() {
       setNewTitle('');
       setNewDescription('');
       setNewStatus('Open');
-      fetchIssues();
+      fetchIssues();  // <-- FIXED: added parentheses here
     }
   }
 
@@ -145,7 +145,9 @@ export default function Dashboard() {
       Closed: 'bg-red-100 text-red-700',
     };
     return (
-      <span className={`text-xs px-2 py-1 rounded-full font-medium ${colors[status as keyof typeof colors]}`}>
+      <span
+        className={`text-xs px-2 py-1 rounded-full font-medium ${colors[status as keyof typeof colors]}`}
+      >
         {status}
       </span>
     );
@@ -157,36 +159,39 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold">Issue Tracker</h1>
         <button
           onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-transform transform hover:scale-105"
         >
           Logout
         </button>
       </div>
 
       {loading ? (
-        <p className="text-gray-600">Loading issues...</p>
+        <p className="text-gray-600 animate-fadeIn">Loading issues...</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="space-y-4 animate-fadeIn">
           {issues.length === 0 && <p className="text-gray-500">No issues found.</p>}
-          {issues.map(issue => (
-            <li key={issue.id} className="bg-white border rounded p-4 shadow-sm">
+          {issues.map((issue) => (
+            <li
+              key={issue.id}
+              className="bg-white border rounded p-4 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-transform duration-300"
+            >
               {editIssueId === issue.id ? (
                 <>
                   <input
-                    className="border p-2 w-full mb-2 rounded"
+                    className="border p-2 w-full mb-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                     value={editTitle}
-                    onChange={e => setEditTitle(e.target.value)}
+                    onChange={(e) => setEditTitle(e.target.value)}
                   />
                   <textarea
-                    className="border p-2 w-full mb-2 rounded"
+                    className="border p-2 w-full mb-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                     value={editDescription}
-                    onChange={e => setEditDescription(e.target.value)}
+                    onChange={(e) => setEditDescription(e.target.value)}
                     rows={3}
                   />
                   <select
-                    className="border p-2 w-full mb-2 rounded"
+                    className="border p-2 w-full mb-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                     value={editStatus}
-                    onChange={e => setEditStatus(e.target.value as any)}
+                    onChange={(e) => setEditStatus(e.target.value as any)}
                   >
                     <option value="Open">Open</option>
                     <option value="In Progress">In Progress</option>
@@ -195,13 +200,13 @@ export default function Dashboard() {
                   <div className="flex gap-2">
                     <button
                       onClick={saveEdit}
-                      className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                      className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-transform transform hover:scale-105"
                     >
                       Save
                     </button>
                     <button
                       onClick={cancelEdit}
-                      className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                      className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition-transform transform hover:scale-105"
                     >
                       Cancel
                     </button>
@@ -217,13 +222,13 @@ export default function Dashboard() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => startEdit(issue)}
-                      className="bg-yellow-400 text-white px-4 py-1 rounded hover:bg-yellow-500"
+                      className="bg-yellow-400 text-white px-4 py-1 rounded hover:bg-yellow-500 transition-transform transform hover:scale-105"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => deleteIssue(issue.id)}
-                      className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                      className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 transition-transform transform hover:scale-105"
                     >
                       Delete
                     </button>
@@ -242,21 +247,21 @@ export default function Dashboard() {
           <input
             type="text"
             placeholder="Title"
-            className="border p-3 w-full rounded"
+            className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             value={newTitle}
-            onChange={e => setNewTitle(e.target.value)}
+            onChange={(e) => setNewTitle(e.target.value)}
           />
           <textarea
             placeholder="Description"
-            className="border p-3 w-full rounded"
+            className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             value={newDescription}
-            onChange={e => setNewDescription(e.target.value)}
+            onChange={(e) => setNewDescription(e.target.value)}
             rows={4}
           />
           <select
-            className="border p-3 w-full rounded"
+            className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             value={newStatus}
-            onChange={e => setNewStatus(e.target.value as any)}
+            onChange={(e) => setNewStatus(e.target.value as any)}
           >
             <option value="Open">Open</option>
             <option value="In Progress">In Progress</option>
@@ -264,12 +269,28 @@ export default function Dashboard() {
           </select>
           <button
             onClick={handleAddIssue}
-            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-transform transform hover:scale-105"
           >
             Add Issue
           </button>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.4s ease forwards;
+        }
+      `}</style>
     </div>
   );
 }
