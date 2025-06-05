@@ -7,18 +7,27 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      setLoading(false);
+      return;
+    }
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: 'http://localhost:3000/login',
+        // This tells Supabase where to redirect after confirmation
+        emailRedirectTo: 'http://localhost:3000/',
       },
     });
 
@@ -27,8 +36,13 @@ export default function Signup() {
     if (error) {
       setError(error.message);
     } else {
-      alert('Check your email to confirm your signup.');
-      router.push('/login');
+      setSuccess('Check your email to confirm your signup.');
+      setEmail('');
+      setPassword('');
+      // Optional: Redirect to login after delay or let user confirm via email
+      setTimeout(() => {
+        router.push('/login');
+      }, 3000);
     }
   };
 
@@ -38,8 +52,21 @@ export default function Signup() {
         <h1 className="text-2xl font-bold mb-6 text-center">Create an Account</h1>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4"
+          >
             {error}
+          </div>
+        )}
+        {success && (
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4"
+          >
+            {success}
           </div>
         )}
 
@@ -56,6 +83,7 @@ export default function Signup() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
             />
           </div>
 
@@ -71,14 +99,16 @@ export default function Signup() {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
             />
+            <p className="text-xs text-gray-500 mt-1">Password must be at least 6 characters</p>
           </div>
 
           <button
             type="submit"
             disabled={loading}
             className={`w-full p-2 text-white rounded ${
-              loading ? 'bg-blue-300' : 'bg-blue-600 hover:bg-blue-700'
+              loading ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
             }`}
           >
             {loading ? 'Signing up...' : 'Sign Up'}
