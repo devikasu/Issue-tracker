@@ -7,24 +7,52 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const handleAuth = async () => {
     setError('');
+    setSuccess('');
     setLoading(true);
 
-    const { error } = isSignUp
-      ? await supabase.auth.signUp({ email, password })
-      : await supabase.auth.signInWithPassword({ email, password });
+    if (isSignUp) {
+      // SIGNUP
+      const { error } = await supabase.auth.signUp(
+        {
+          email,
+          password,
+        },
+        {
+          // Redirect here after email confirmation
+          emailRedirectTo: process.env.NEXT_PUBLIC_EMAIL_REDIRECT_URL || 'http://localhost:3000',
+        }
+      );
 
-    setLoading(false);
+      setLoading(false);
 
-    if (error) {
-      setError(error.message);
+      if (error) {
+        setError(error.message);
+      } else {
+        setSuccess(
+          'Signup successful! Please check your email to confirm your account before logging in.'
+        );
+        setIsSignUp(false); // Switch to login mode
+        setEmail('');
+        setPassword('');
+      }
     } else {
-      router.push('/dashboard');
+      // LOGIN
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+      setLoading(false);
+
+      if (error) {
+        setError(error.message);
+      } else {
+        router.push('/dashboard');
+      }
     }
   };
 
@@ -36,8 +64,22 @@ export default function LoginPage() {
         </h1>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4"
+          >
             {error}
+          </div>
+        )}
+
+        {success && (
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4"
+          >
+            {success}
           </div>
         )}
 
@@ -48,6 +90,7 @@ export default function LoginPage() {
           className="w-full p-2 border border-gray-300 rounded mb-4"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          disabled={loading}
         />
 
         <label className="block mb-2 font-medium">Password</label>
@@ -57,11 +100,12 @@ export default function LoginPage() {
           className="w-full p-2 border border-gray-300 rounded mb-6"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          disabled={loading}
         />
 
         <button
           className={`w-full p-2 rounded text-white ${
-            loading ? 'bg-blue-300' : 'bg-blue-600 hover:bg-blue-700'
+            loading ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
           }`}
           onClick={handleAuth}
           disabled={loading}
@@ -76,6 +120,7 @@ export default function LoginPage() {
             onClick={() => {
               setIsSignUp(!isSignUp);
               setError('');
+              setSuccess('');
             }}
           >
             {isSignUp ? 'Login' : 'Sign Up'}
