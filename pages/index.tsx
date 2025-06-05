@@ -19,16 +19,13 @@ export default function LoginPage() {
 
     if (isSignUp) {
       // SIGNUP
-      const { error } = await supabase.auth.signUp(
-        {
-          email,
-          password,
-        },
-        {
-          // Redirect here after email confirmation
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
           emailRedirectTo: process.env.NEXT_PUBLIC_EMAIL_REDIRECT_URL || 'http://localhost:3000',
-        }
-      );
+        },
+      });
 
       setLoading(false);
 
@@ -38,7 +35,7 @@ export default function LoginPage() {
         setSuccess(
           'Signup successful! Please check your email to confirm your account before logging in.'
         );
-        setIsSignUp(false); // Switch to login mode
+        setIsSignUp(false); // switch to login form
         setEmail('');
         setPassword('');
       }
@@ -51,7 +48,7 @@ export default function LoginPage() {
       if (error) {
         setError(error.message);
       } else {
-        router.push('/dashboard');
+        router.push('/dashboard'); // redirect on login success
       }
     }
   };
@@ -64,21 +61,12 @@ export default function LoginPage() {
         </h1>
 
         {error && (
-          <div
-            role="alert"
-            aria-live="assertive"
-            className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4"
-          >
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
             {error}
           </div>
         )}
-
         {success && (
-          <div
-            role="alert"
-            aria-live="assertive"
-            className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4"
-          >
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
             {success}
           </div>
         )}
@@ -90,7 +78,6 @@ export default function LoginPage() {
           className="w-full p-2 border border-gray-300 rounded mb-4"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          disabled={loading}
         />
 
         <label className="block mb-2 font-medium">Password</label>
@@ -100,7 +87,6 @@ export default function LoginPage() {
           className="w-full p-2 border border-gray-300 rounded mb-6"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          disabled={loading}
         />
 
         <button
