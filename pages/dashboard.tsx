@@ -1,3 +1,5 @@
+// pages/dashboard.tsx
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../lib/supabase';
@@ -12,43 +14,30 @@ type Issue = {
 export default function Dashboard() {
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const router = useRouter();
 
-  // For new issue form
   const [newTitle, setNewTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [newStatus, setNewStatus] = useState<'Open' | 'In Progress' | 'Closed'>('Open');
 
-  // For editing issues
   const [editIssueId, setEditIssueId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
   const [editStatus, setEditStatus] = useState<'Open' | 'In Progress' | 'Closed'>('Open');
 
-  const [error, setError] = useState('');
-  const router = useRouter();
-
   useEffect(() => {
-    const checkUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        router.push('/'); // Redirect to login
-      } else {
-        fetchIssues();
-      }
-    };
-
-    checkUser();
+    fetchIssues();
   }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
+  };
 
   async function fetchIssues() {
     setLoading(true);
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = (await supabase.auth.getUser()).data?.user;
     if (!user) {
       setError('Not logged in');
       setLoading(false);
@@ -66,7 +55,6 @@ export default function Dashboard() {
     } else {
       setIssues(data || []);
     }
-
     setLoading(false);
   }
 
@@ -77,10 +65,7 @@ export default function Dashboard() {
       return;
     }
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = (await supabase.auth.getUser()).data?.user;
     if (!user) {
       setError('Not logged in');
       return;
@@ -155,14 +140,21 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-3xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">My Issues</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">My Issues</h1>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+        >
+          Logout
+        </button>
+      </div>
 
       {loading ? (
         <p>Loading...</p>
       ) : (
         <>
           {issues.length === 0 && <p>No issues found.</p>}
-
           <ul className="space-y-3">
             {issues.map(issue => (
               <li key={issue.id} className="border p-3 rounded shadow-sm">
@@ -234,9 +226,7 @@ export default function Dashboard() {
 
       <div className="mt-8 border-t pt-4">
         <h2 className="text-xl font-semibold mb-2">Add New Issue</h2>
-
         {error && <p className="text-red-500 mb-2">{error}</p>}
-
         <input
           type="text"
           placeholder="Title"
@@ -244,7 +234,6 @@ export default function Dashboard() {
           value={newTitle}
           onChange={e => setNewTitle(e.target.value)}
         />
-
         <textarea
           placeholder="Description"
           className="border p-2 w-full mb-2"
@@ -252,7 +241,6 @@ export default function Dashboard() {
           onChange={e => setNewDescription(e.target.value)}
           rows={4}
         />
-
         <select
           className="border p-2 mb-2"
           value={newStatus}
@@ -262,7 +250,6 @@ export default function Dashboard() {
           <option value="In Progress">In Progress</option>
           <option value="Closed">Closed</option>
         </select>
-
         <button
           onClick={handleAddIssue}
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
