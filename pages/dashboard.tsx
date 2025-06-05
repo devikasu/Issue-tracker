@@ -11,7 +11,6 @@ type Issue = {
   status: 'Open' | 'In Progress' | 'Closed';
 };
 
-// Global styles for body background color
 export const GlobalStyles = () => (
   <style jsx global>{`
     body {
@@ -151,9 +150,9 @@ export default function Dashboard() {
 
   const statusBadge = (status: string) => {
     const colors = {
-      Open: 'bg-blue-100 text-blue-800',
-      'In Progress': 'bg-yellow-100 text-yellow-800',
-      Closed: 'bg-red-100 text-red-800',
+      Open: 'bg-green-100 text-green-800 border border-green-500',
+      'In Progress': 'bg-yellow-100 text-yellow-800 border border-yellow-500',
+      Closed: 'bg-red-100 text-red-800 border border-red-500',
     };
     return (
       <span
@@ -167,47 +166,49 @@ export default function Dashboard() {
   return (
     <>
       <GlobalStyles />
-      <div className="max-w-4xl mx-auto p-6 min-h-screen" style={{ backgroundColor: '#f5cef0' }}>
+      <div className="max-w-4xl mx-auto p-6 min-h-screen">
         <header className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">Issue Tracker</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight text-[#a30054] transition-all duration-300 hover:scale-105">
+            Issue Tracker
+          </h1>
           <button
             onClick={handleLogout}
-            className="bg-red-600 text-white px-5 py-2 rounded-md shadow hover:bg-red-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="px-5 py-2 rounded-md transition-all duration-300 ease-in-out shadow text-[#ffcff1] bg-[#a30054] hover:bg-[#80003d] hover:scale-105"
           >
             Logout
           </button>
         </header>
 
         {loading ? (
-          <p className="text-gray-600 text-center animate-fadeIn">Loading issues...</p>
+          <p className="text-center text-[#a30054]">Loading issues...</p>
         ) : (
           <>
             {issues.length === 0 ? (
-              <p className="text-center text-gray-500 text-lg">No issues found.</p>
+              <p className="text-center text-lg text-[#a30054]">No issues found.</p>
             ) : (
               <ul className="space-y-6">
                 {issues.map((issue) => (
                   <li
                     key={issue.id}
-                    className="bg-white border border-gray-200 rounded-lg p-5 shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1"
+                    className="bg-[#ffcff1] border border-[#a30054] rounded-lg p-5 shadow-md hover:shadow-xl hover:scale-[1.01] transition-all duration-300 ease-in-out"
                   >
                     {editIssueId === issue.id ? (
                       <>
                         <input
-                          className="border border-gray-300 p-3 w-full mb-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                          className="border p-3 w-full mb-3 rounded-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#a30054]"
                           value={editTitle}
                           onChange={(e) => setEditTitle(e.target.value)}
                           placeholder="Title"
                         />
                         <textarea
-                          className="border border-gray-300 p-3 w-full mb-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                          className="border p-3 w-full mb-3 rounded-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#a30054]"
                           value={editDescription}
                           onChange={(e) => setEditDescription(e.target.value)}
                           rows={4}
                           placeholder="Description"
                         />
                         <select
-                          className="border border-gray-300 p-3 w-full mb-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                          className="border p-3 w-full mb-4 rounded-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#a30054]"
                           value={editStatus}
                           onChange={(e) => setEditStatus(e.target.value as any)}
                         >
@@ -218,13 +219,13 @@ export default function Dashboard() {
                         <div className="flex gap-3 justify-end">
                           <button
                             onClick={saveEdit}
-                            className="bg-green-600 text-white px-5 py-2 rounded-md shadow hover:bg-green-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500"
+                            className="px-5 py-2 rounded-md transition-all duration-300 ease-in-out shadow text-[#ffcff1] bg-[#a30054] hover:bg-[#80003d] hover:scale-105"
                           >
                             Save
                           </button>
                           <button
                             onClick={cancelEdit}
-                            className="bg-gray-300 text-gray-800 px-5 py-2 rounded-md hover:bg-gray-400 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                            className="px-5 py-2 rounded-md transition-all duration-300 ease-in-out shadow border border-[#a30054] text-[#a30054] bg-[#ffcff1] hover:bg-[#a30054] hover:text-[#ffcff1] hover:scale-105"
                           >
                             Cancel
                           </button>
@@ -233,20 +234,20 @@ export default function Dashboard() {
                     ) : (
                       <>
                         <div className="flex justify-between items-center mb-3">
-                          <h2 className="text-2xl font-semibold text-gray-900">{issue.title}</h2>
+                          <h2 className="text-xl font-semibold text-[#a30054]">{issue.title}</h2>
                           {statusBadge(issue.status)}
                         </div>
-                        <p className="text-gray-700 mb-4 whitespace-pre-line">{issue.description}</p>
+                        <p className="text-[#a30054] whitespace-pre-line mb-4">{issue.description}</p>
                         <div className="flex gap-4 justify-end">
                           <button
                             onClick={() => startEdit(issue)}
-                            className="bg-yellow-400 text-gray-900 px-5 py-2 rounded-md shadow hover:bg-yellow-500 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            className="px-5 py-2 rounded-md transition-all duration-300 ease-in-out shadow text-[#ffcff1] bg-[#a30054] hover:bg-[#80003d] hover:scale-105"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => deleteIssue(issue.id)}
-                            className="bg-red-600 text-white px-5 py-2 rounded-md shadow hover:bg-red-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500"
+                            className="px-5 py-2 rounded-md transition-all duration-300 ease-in-out shadow text-[#ffcff1] bg-[#a30054] hover:bg-[#80003d] hover:scale-105"
                           >
                             Delete
                           </button>
@@ -260,26 +261,26 @@ export default function Dashboard() {
           </>
         )}
 
-        <section className="mt-12 border-t border-gray-300 pt-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Add New Issue</h2>
-          {error && <p className="text-red-600 mb-4 text-center font-semibold">{error}</p>}
-          <div className="max-w-xl mx-auto space-y-5">
+        <section className="mt-12 border-t pt-8 border-[#a30054]">
+          <h2 className="text-3xl font-bold text-[#a30054] mb-6">Add New Issue</h2>
+          {error && <p className="text-[#a30054] text-center font-semibold mb-4">{error}</p>}
+          <div className="space-y-4">
             <input
               type="text"
               placeholder="Title"
-              className="border border-gray-300 p-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="p-4 w-full rounded-md border border-[#a30054] bg-[#ffcff1] text-[#a30054] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#a30054]"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
             />
             <textarea
               placeholder="Description"
-              className="border border-gray-300 p-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition resize-none"
+              className="p-4 w-full rounded-md border border-[#a30054] bg-[#ffcff1] text-[#a30054] resize-none transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#a30054]"
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}
               rows={5}
             />
             <select
-              className="border border-gray-300 p-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="p-4 w-full rounded-md border border-[#a30054] bg-[#ffcff1] text-[#a30054] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#a30054]"
               value={newStatus}
               onChange={(e) => setNewStatus(e.target.value as any)}
             >
@@ -289,28 +290,12 @@ export default function Dashboard() {
             </select>
             <button
               onClick={handleAddIssue}
-              className="bg-blue-600 text-white px-8 py-3 rounded-md shadow hover:bg-blue-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-600 w-full"
+              className="w-full px-8 py-3 rounded-md transition-all duration-300 ease-in-out shadow text-[#ffcff1] bg-[#a30054] hover:bg-[#80003d] hover:scale-105"
             >
               Add Issue
             </button>
           </div>
         </section>
-
-        <style jsx>{`
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-              transform: translateY(10px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-          .animate-fadeIn {
-            animation: fadeIn 0.4s ease forwards;
-          }
-        `}</style>
       </div>
     </>
   );
