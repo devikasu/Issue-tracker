@@ -138,124 +138,137 @@ export default function Dashboard() {
     }
   }
 
+  const statusBadge = (status: string) => {
+    const colors = {
+      Open: 'bg-green-100 text-green-700',
+      'In Progress': 'bg-yellow-100 text-yellow-800',
+      Closed: 'bg-red-100 text-red-700',
+    };
+    return (
+      <span className={`text-xs px-2 py-1 rounded-full font-medium ${colors[status as keyof typeof colors]}`}>
+        {status}
+      </span>
+    );
+  };
+
   return (
     <div className="max-w-3xl mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">My Issues</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Issue Tracker</h1>
         <button
           onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
         >
           Logout
         </button>
       </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <p className="text-gray-600">Loading issues...</p>
       ) : (
-        <>
-          {issues.length === 0 && <p>No issues found.</p>}
-          <ul className="space-y-3">
-            {issues.map(issue => (
-              <li key={issue.id} className="border p-3 rounded shadow-sm">
-                {editIssueId === issue.id ? (
-                  <>
-                    <input
-                      className="border p-1 w-full mb-1"
-                      value={editTitle}
-                      onChange={e => setEditTitle(e.target.value)}
-                    />
-                    <textarea
-                      className="border p-1 w-full mb-1"
-                      value={editDescription}
-                      onChange={e => setEditDescription(e.target.value)}
-                      rows={3}
-                    />
-                    <select
-                      className="border p-1 mb-2"
-                      value={editStatus}
-                      onChange={e => setEditStatus(e.target.value as any)}
+        <ul className="space-y-4">
+          {issues.length === 0 && <p className="text-gray-500">No issues found.</p>}
+          {issues.map(issue => (
+            <li key={issue.id} className="bg-white border rounded p-4 shadow-sm">
+              {editIssueId === issue.id ? (
+                <>
+                  <input
+                    className="border p-2 w-full mb-2 rounded"
+                    value={editTitle}
+                    onChange={e => setEditTitle(e.target.value)}
+                  />
+                  <textarea
+                    className="border p-2 w-full mb-2 rounded"
+                    value={editDescription}
+                    onChange={e => setEditDescription(e.target.value)}
+                    rows={3}
+                  />
+                  <select
+                    className="border p-2 w-full mb-2 rounded"
+                    value={editStatus}
+                    onChange={e => setEditStatus(e.target.value as any)}
+                  >
+                    <option value="Open">Open</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Closed">Closed</option>
+                  </select>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={saveEdit}
+                      className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
                     >
-                      <option value="Open">Open</option>
-                      <option value="In Progress">In Progress</option>
-                      <option value="Closed">Closed</option>
-                    </select>
-                    <div>
-                      <button
-                        onClick={saveEdit}
-                        className="bg-green-600 text-white px-3 py-1 rounded mr-2"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={cancelEdit}
-                        className="bg-gray-400 text-white px-3 py-1 rounded"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <h2 className="font-semibold text-lg">{issue.title}</h2>
-                    <p>{issue.description}</p>
-                    <p className="mt-1 text-sm font-medium">
-                      Status: <span className="capitalize">{issue.status}</span>
-                    </p>
-                    <div className="mt-2 space-x-2">
-                      <button
-                        onClick={() => startEdit(issue)}
-                        className="bg-yellow-400 text-white px-3 py-1 rounded"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => deleteIssue(issue.id)}
-                        className="bg-red-600 text-white px-3 py-1 rounded"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </>
-                )}
-              </li>
-            ))}
-          </ul>
-        </>
+                      Save
+                    </button>
+                    <button
+                      onClick={cancelEdit}
+                      className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex justify-between items-start mb-2">
+                    <h2 className="text-xl font-semibold">{issue.title}</h2>
+                    {statusBadge(issue.status)}
+                  </div>
+                  <p className="text-gray-700 mb-2">{issue.description}</p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => startEdit(issue)}
+                      className="bg-yellow-400 text-white px-4 py-1 rounded hover:bg-yellow-500"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteIssue(issue.id)}
+                      className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </>
+              )}
+            </li>
+          ))}
+        </ul>
       )}
 
-      <div className="mt-8 border-t pt-4">
-        <h2 className="text-xl font-semibold mb-2">Add New Issue</h2>
+      <div className="mt-10 border-t pt-6">
+        <h2 className="text-2xl font-semibold mb-4">Add New Issue</h2>
         {error && <p className="text-red-500 mb-2">{error}</p>}
-        <input
-          type="text"
-          placeholder="Title"
-          className="border p-2 w-full mb-2"
-          value={newTitle}
-          onChange={e => setNewTitle(e.target.value)}
-        />
-        <textarea
-          placeholder="Description"
-          className="border p-2 w-full mb-2"
-          value={newDescription}
-          onChange={e => setNewDescription(e.target.value)}
-          rows={4}
-        />
-        <select
-          className="border p-2 mb-2"
-          value={newStatus}
-          onChange={e => setNewStatus(e.target.value as any)}
-        >
-          <option value="Open">Open</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Closed">Closed</option>
-        </select>
-        <button
-          onClick={handleAddIssue}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Add Issue
-        </button>
+        <div className="space-y-4">
+          <input
+            type="text"
+            placeholder="Title"
+            className="border p-3 w-full rounded"
+            value={newTitle}
+            onChange={e => setNewTitle(e.target.value)}
+          />
+          <textarea
+            placeholder="Description"
+            className="border p-3 w-full rounded"
+            value={newDescription}
+            onChange={e => setNewDescription(e.target.value)}
+            rows={4}
+          />
+          <select
+            className="border p-3 w-full rounded"
+            value={newStatus}
+            onChange={e => setNewStatus(e.target.value as any)}
+          >
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Closed">Closed</option>
+          </select>
+          <button
+            onClick={handleAddIssue}
+            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Add Issue
+          </button>
+        </div>
       </div>
     </div>
   );

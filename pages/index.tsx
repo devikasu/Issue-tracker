@@ -7,51 +7,76 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
 
   const handleAuth = async () => {
     setError('');
+    setLoading(true);
+
     const { error } = isSignUp
       ? await supabase.auth.signUp({ email, password })
       : await supabase.auth.signInWithPassword({ email, password });
 
+    setLoading(false);
+
     if (error) {
       setError(error.message);
     } else {
-      router.push('/dashboard'); // ✅ Go to dashboard after login
+      router.push('/dashboard');
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4">{isSignUp ? 'Sign Up' : 'Login'}</h1>
-        {error && <p className="text-red-500 mb-2">{error}</p>}
+        <h1 className="text-2xl font-bold mb-6 text-center">
+          {isSignUp ? 'Create an Account' : 'Login to Your Account'}
+        </h1>
+
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+            {error}
+          </div>
+        )}
+
+        <label className="block mb-2 font-medium">Email</label>
         <input
           type="email"
-          placeholder="Email"
+          placeholder="you@example.com"
           className="w-full p-2 border border-gray-300 rounded mb-4"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+
+        <label className="block mb-2 font-medium">Password</label>
         <input
           type="password"
-          placeholder="Password"
-          className="w-full p-2 border border-gray-300 rounded mb-4"
+          placeholder="••••••••"
+          className="w-full p-2 border border-gray-300 rounded mb-6"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+
         <button
-          className="w-full bg-blue-500 text-white p-2 rounded"
+          className={`w-full p-2 rounded text-white ${
+            loading ? 'bg-blue-300' : 'bg-blue-600 hover:bg-blue-700'
+          }`}
           onClick={handleAuth}
+          disabled={loading}
         >
-          {isSignUp ? 'Sign Up' : 'Login'}
+          {loading ? 'Please wait...' : isSignUp ? 'Sign Up' : 'Login'}
         </button>
-        <p className="mt-4 text-center">
+
+        <p className="mt-6 text-center text-sm text-gray-600">
           {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
           <button
-            className="text-blue-500 underline"
-            onClick={() => setIsSignUp(!isSignUp)}
+            className="text-blue-500 underline font-medium"
+            onClick={() => {
+              setIsSignUp(!isSignUp);
+              setError('');
+            }}
           >
             {isSignUp ? 'Login' : 'Sign Up'}
           </button>
