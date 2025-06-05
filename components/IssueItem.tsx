@@ -20,7 +20,8 @@ type Props = {
   cancelEdit: () => void;
   saveEdit: () => void;
   deleteIssue: (id: string) => void;
-  statusBadge: (status: string) => JSX.Element;
+  statusBadge: (status: string) => React.ReactElement;
+
 };
 
 export default function IssueItem({
@@ -39,9 +40,7 @@ export default function IssueItem({
   statusBadge,
 }: Props) {
   return (
-    <li
-      className="bg-white border rounded p-4 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-transform duration-300"
-    >
+    <li className="bg-white border rounded p-4 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-transform duration-300">
       {editIssueId === issue.id ? (
         <>
           <input
@@ -58,7 +57,9 @@ export default function IssueItem({
           <select
             className="border p-2 w-full mb-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             value={editStatus}
-            onChange={(e) => setEditStatus(e.target.value as 'Open' | 'In Progress' | 'Closed')}
+            onChange={(e) =>
+              setEditStatus(e.target.value as 'Open' | 'In Progress' | 'Closed')
+            }
           >
             <option value="Open">Open</option>
             <option value="In Progress">In Progress</option>

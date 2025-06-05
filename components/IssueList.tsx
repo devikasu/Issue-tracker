@@ -1,6 +1,8 @@
 // components/IssueList.tsx
 import React from 'react';
+
 import IssueItem from './IssueItem';
+
 
 type Issue = {
   id: string;
@@ -22,7 +24,7 @@ type Props = {
   cancelEdit: () => void;
   saveEdit: () => void;
   deleteIssue: (id: string) => void;
-  statusBadge: (status: string) => JSX.Element;
+  statusBadge: (status: string) => React.ReactElement;
 };
 
 export default function IssueList({
