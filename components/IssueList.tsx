@@ -1,8 +1,6 @@
-// components/IssueList.tsx
 import React from 'react';
-
+import { motion } from 'framer-motion';
 import IssueItem from './IssueItem';
-
 
 type Issue = {
   id: string;
@@ -47,7 +45,19 @@ export default function IssueList({
   }
 
   return (
-    <ul className="space-y-4 animate-fadeIn">
+    <motion.ul
+      className="space-y-4"
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            staggerChildren: 0.1,
+          },
+        },
+      }}
+    >
       {issues.map((issue) => (
         <IssueItem
           key={issue.id}
@@ -66,6 +76,6 @@ export default function IssueList({
           statusBadge={statusBadge}
         />
       ))}
-    </ul>
+    </motion.ul>
   );
 }

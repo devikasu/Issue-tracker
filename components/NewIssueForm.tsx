@@ -1,5 +1,5 @@
-// components/NewIssueForm.tsx
 import React from 'react';
+import { motion } from 'framer-motion';
 
 type Props = {
   newTitle: string;
@@ -23,7 +23,12 @@ export default function NewIssueForm({
   error,
 }: Props) {
   return (
-    <div className="mt-10 border-t pt-6">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="mt-10 border-t pt-6"
+    >
       <h2 className="text-2xl font-semibold mb-4">Add New Issue</h2>
       {error && <p className="text-red-500 mb-2">{error}</p>}
       <div className="space-y-4">
@@ -50,13 +55,15 @@ export default function NewIssueForm({
           <option value="In Progress">In Progress</option>
           <option value="Closed">Closed</option>
         </select>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05, boxShadow: '0 0 10px rgba(59,130,246,0.6)' }}
+          whileTap={{ scale: 0.95 }}
           onClick={handleAddIssue}
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-transform transform hover:scale-105"
+          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
         >
           Add Issue
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 }

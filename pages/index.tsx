@@ -54,55 +54,88 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffcff1' }}>
+      <div
+        className="p-8 rounded shadow-md w-full max-w-md"
+        style={{ backgroundColor: '#fff0f7', boxShadow: '0 4px 12px rgba(255, 204, 225, 0.5)' }}
+      >
+        <h1 className="text-2xl font-bold mb-6 text-center" style={{ color: '#a30054' }}>
           {isSignUp ? 'Create an Account' : 'Login to Your Account'}
         </h1>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+          <div
+            className="px-4 py-2 rounded mb-4"
+            style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', color: '#721c24' }}
+          >
             {error}
           </div>
         )}
         {success && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
+          <div
+            className="px-4 py-2 rounded mb-4"
+            style={{ backgroundColor: '#d4edda', border: '1px solid #c3e6cb', color: '#155724' }}
+          >
             {success}
           </div>
         )}
 
-        <label className="block mb-2 font-medium">Email</label>
+        <label className="block mb-2 font-medium" style={{ color: '#660036' }}>
+          Email
+        </label>
         <input
           type="email"
           placeholder="you@example.com"
-          className="w-full p-2 border border-gray-300 rounded mb-4"
+          className="w-full p-2 rounded mb-4"
+          style={{
+            border: '1px solid #d18bbf',
+            backgroundColor: '#ffe6f2',
+            color: '#660036',
+          }}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <label className="block mb-2 font-medium">Password</label>
+        <label className="block mb-2 font-medium" style={{ color: '#660036' }}>
+          Password
+        </label>
         <input
           type="password"
           placeholder="••••••••"
-          className="w-full p-2 border border-gray-300 rounded mb-6"
+          className="w-full p-2 rounded mb-6"
+          style={{
+            border: '1px solid #d18bbf',
+            backgroundColor: '#ffe6f2',
+            color: '#660036',
+          }}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
         <button
-          className={`w-full p-2 rounded text-white ${
-            loading ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-          }`}
+          className="w-full p-2 rounded text-white"
           onClick={handleAuth}
           disabled={loading}
+          style={{
+            backgroundColor: loading ? '#f4b6d9' : '#a30054',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            transition: 'background-color 0.3s',
+          }}
+          onMouseEnter={(e) => {
+            if (!loading) e.currentTarget.style.backgroundColor = '#7a003e';
+          }}
+          onMouseLeave={(e) => {
+            if (!loading) e.currentTarget.style.backgroundColor = '#a30054';
+          }}
         >
           {loading ? 'Please wait...' : isSignUp ? 'Sign Up' : 'Login'}
         </button>
 
-        <p className="mt-6 text-center text-sm text-gray-600">
+        <p className="mt-6 text-center text-sm" style={{ color: '#660036' }}>
           {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
           <button
-            className="text-blue-500 underline font-medium"
+            className="underline font-medium"
+            style={{ color: '#a30054', background: 'none', border: 'none', cursor: 'pointer' }}
             onClick={() => {
               setIsSignUp(!isSignUp);
               setError('');
