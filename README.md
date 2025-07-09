@@ -38,9 +38,3 @@ A simple web-based Issue Tracker application to help teams manage and track issu
 - Access the app at `http://localhost:3000` after starting the development server.
 - Sign up for a new account or log in.
 - Create, view, and manage issues from the dashboard.
-
-## Contributing
-Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
-
-## License
-This project is licensed under the MIT License.
